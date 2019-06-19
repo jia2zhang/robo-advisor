@@ -17,12 +17,26 @@ print(response)
 
 last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
 
-tsd = parsed_response["Time Series (Daily)"]
-latest_day = list(tsd.keys())
-latest_close = tsd[latest_day[0]]["4. close"]
-
 def to_usd(cost):
     return str("${0:,.2f}".format(cost))
+
+tsd = parsed_response["Time Series (Daily)"]
+dates = list(tsd.keys()) # TODO: Need to make sure the dates are sorted with the latest first
+latest_day = dates[0]
+latest_close = tsd[latest_day]["4. close"]
+
+# Max of all the high prices
+high_prices = []
+low_prices = []
+
+for date in dates:
+    high_price = tsd[latest_day]["2. high"]
+    high_prices.append(float(high_price))
+    low_price = tsd[latest_day]["3. low"]
+    low_prices.append(float(low_price))
+
+recent_high = max(high_prices)
+recent_low = min(low_prices)
 
 # user_input = []
 # while True:
@@ -46,8 +60,8 @@ print("REQUEST AT: 2018-02-20 02:00pm")
 print("-------------------------")
 print(f"LATEST DAY: {last_refreshed}")
 print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
-print("RECENT HIGH: $101,000.00")
-print("RECENT LOW: $99,000.00")
+print(f"RECENT HIGH: {to_usd(float(recent_high))}")
+print(f"RECENT LOW: {to_usd(float(recent_low))}")
 print("-------------------------")
 print("RECOMMENDATION: BUY!")
 print("RECOMMENDATION REASON: TODO")
