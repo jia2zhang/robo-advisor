@@ -12,6 +12,7 @@ conda activate stocks-env
 pip install -r requirements.txt
 pip install pytest # (this may be skipped if test scripts were not created)
 pip install python-dotenv
+pip install requests
 ```
 
 ## Once ready to run the program, run the following from the command-line
