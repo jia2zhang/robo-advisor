@@ -6,17 +6,23 @@ import os, requests, json
 
 load_dotenv() #> loads contents of the .env file into the script's environment
 # os.environ.get("ALPHAVANTAGE_API_KEY") #> This is my API KEY
+stock_symbol = input("Please input a stock symbol like 'MSFT', or 'DONE' if there are no more items:")
 
 ## Process input
 
-request_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=" + os.environ.get("ALPHAVANTAGE_API_KEY")
+request_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol="+stock_symbol+"&apikey=" + os.environ.get("ALPHAVANTAGE_API_KEY")
 response = requests.get(request_url)
-# print(type(response))
-# print(response.status_code)
-# print(response.text)
 parsed_response = json.loads(response.text)
+print(response)
 
 last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
+
+tsd = parsed_response["Time Series (Daily)"]
+latest_day = list(tsd.keys())
+latest_close = tsd[latest_day[0]]["4. close"]
+
+def to_usd(cost):
+    return str("${0:,.2f}".format(cost))
 
 # user_input = []
 # while True:
@@ -39,7 +45,7 @@ print("REQUESTING STOCK MARKET DATA...")
 print("REQUEST AT: 2018-02-20 02:00pm")
 print("-------------------------")
 print(f"LATEST DAY: {last_refreshed}")
-print("LATEST CLOSE: $100,000.00")
+print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
 print("RECENT HIGH: $101,000.00")
 print("RECENT LOW: $99,000.00")
 print("-------------------------")
