@@ -53,11 +53,18 @@ recent_low = min(low_prices)
 #         continue
 
 ## Process output
+csv_file_path = os.path.join(os.path.dirname(__file__), "..", "data", "prices.csv")
+
+with open(csv_file_path, "w") as csv_file:
+    writer = csv.DictWriter(csv_file, fieldnames=["timestamp", "open", "high", "low", "close", "volume"])
+    writer.writeheader()
+    
+
 
 print("-------------------------")
 print(f"SELECTED SYMBOL: {symbol}")
 print("-------------------------")
-print("REQUESTING STOCK MARKET DATA...")
+print("REQUESTING STOCK MARKET DATA")
 print(f"REQUEST AT: {request_time}")
 print("-------------------------")
 print(f"LATEST DAY: {last_refreshed}")
@@ -68,5 +75,10 @@ print("-------------------------")
 print("RECOMMENDATION: BUY!")
 print("RECOMMENDATION REASON: TODO")
 print("-------------------------")
+print(f"WRITING DATA TO CSV: {csv_file_path}...")
+print("-------------------------")
 print("HAPPY INVESTING!")
 print("-------------------------")
+
+
+
