@@ -5,15 +5,36 @@ from dotenv import load_dotenv
 import os, requests, json, csv, datetime
 
 load_dotenv() #> loads contents of the .env file into the script's environment
-# os.environ.get("ALPHAVANTAGE_API_KEY") #> This is my API KEY
-stock_symbol = input("Please input a stock symbol like 'MSFT', or 'DONE' if there are no more items:")
+api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
+# stock_symbol = input("Please input a stock symbol like 'MSFT', or 'DONE' if there are no more items:")
+
+# 3-5 characters, alpha, capitalized (or i cap it), valid input
+while True:
+    stock_symbol = input("Please input a stock symbol like 'MSFT':")
+    if len(stock_symbol) <3 or len(stock_symbol) >5 or stock_symbol.isalpha() == False:
+        print("Oh, expecting a properly-formed stock symbol like 'MSFT'. Please try again.")
+        continue
+    else:
+        stock_symbol = stock_symbol.upper()
+        request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={stock_symbol}&apikey={api_key}"
+        response = requests.get(request_url)
+        parsed_response = json.loads(response.text)
+        # print(parsed_response)
+        if "Meta Data" not in parsed_response:
+            print("Sorry, couldn't find any trading data for that stock symbol.")
+            continue
+        # print(response.status_code)
+        # print(stock_symbol)
+        else: 
+
+
 
 ## Process input
 
-request_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol="+stock_symbol+"&apikey=" + os.environ.get("ALPHAVANTAGE_API_KEY")
-response = requests.get(request_url)
-parsed_response = json.loads(response.text)
-print(response)
+# request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={stock_symbol}&apikey={api_key}"
+# response = requests.get(request_url)
+# parsed_response = json.loads(response.text)
+# print(response)
 
 last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
 
@@ -40,18 +61,6 @@ for date in dates:
 recent_high = max(high_prices)
 recent_low = min(low_prices)
 
-# user_input = []
-# while True:
-#     x = input("Please input a stock symbol like 'MSFT', or 'DONE' if there are no more items:")
-#     if x.lower() == "done":
-#         break
-#     Valid_product_identifier = False
-#     if ((isinstance(x, str) and x.upper() == True and len(x) == range(3,6)):
-#         user_input.append(x)
-#     else:
-#         print("Oh, expecting a properly-formed stock symbol like 'MSFT'. Please try again.")
-#         continue
-
 ## Process output
 csv_file_path = os.path.join(os.path.dirname(__file__), "..", "data", "prices.csv")
 
@@ -69,7 +78,7 @@ with open(csv_file_path, "w") as csv_file:
             "high": daily_prices["2. high"], 
             "low": daily_prices["3. low"], 
             "close": daily_prices["4. close"], 
-            "volume": daily_prices["5. volume"]
+            "volume": daily_prices["5. volumex"]
         })
 
 print("-------------------------")
