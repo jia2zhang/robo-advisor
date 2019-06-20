@@ -2,7 +2,7 @@
 
 # from .env file
 from dotenv import load_dotenv
-import os, requests, json
+import os, requests, json, csv, datetime
 
 load_dotenv() #> loads contents of the .env file into the script's environment
 # os.environ.get("ALPHAVANTAGE_API_KEY") #> This is my API KEY
@@ -20,10 +20,12 @@ last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
 def to_usd(cost):
     return str("${0:,.2f}".format(cost))
 
+symbol = parsed_response["Meta Data"]["2. Symbol"]
 tsd = parsed_response["Time Series (Daily)"]
 dates = list(tsd.keys()) # TODO: Need to make sure the dates are sorted with the latest first
 latest_day = dates[0]
 latest_close = tsd[latest_day]["4. close"]
+request_time = ""+datetime.datetime.now().strftime("%Y-%m-%d %I:%M%p")
 
 # Max of all the high prices
 high_prices = []
@@ -53,10 +55,10 @@ recent_low = min(low_prices)
 ## Process output
 
 print("-------------------------")
-print("SELECTED SYMBOL: XYZ")
+print(f"SELECTED SYMBOL: {symbol}")
 print("-------------------------")
 print("REQUESTING STOCK MARKET DATA...")
-print("REQUEST AT: 2018-02-20 02:00pm")
+print(f"REQUEST AT: {request_time}")
 print("-------------------------")
 print(f"LATEST DAY: {last_refreshed}")
 print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
