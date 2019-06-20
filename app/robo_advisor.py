@@ -55,11 +55,19 @@ recent_low = min(low_prices)
 ## Process output
 csv_file_path = os.path.join(os.path.dirname(__file__), "..", "data", "prices.csv")
 
+csv_headers = ["timestamp", "open", "high", "low", "close", "volume"]
 with open(csv_file_path, "w") as csv_file:
-    writer = csv.DictWriter(csv_file, fieldnames=["timestamp", "open", "high", "low", "close", "volume"])
+    writer = csv.DictWriter(csv_file, fieldnames = csv_headers)
     writer.writeheader()
-    
-
+    # loop through each row to write each row
+    writer.writerow({
+        "timestamp": , 
+        "open": , 
+        "high": , 
+        "low": , 
+        "close": , 
+        "volume": 
+    })
 
 print("-------------------------")
 print(f"SELECTED SYMBOL: {symbol}")
