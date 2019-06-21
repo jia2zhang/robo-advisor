@@ -13,7 +13,7 @@ while True:
     stock_symbol = input("Please input a stock symbol like 'MSFT':")
     if len(stock_symbol) <3 or len(stock_symbol) >5 or stock_symbol.isalpha() == False:
         print("Oh, expecting a properly-formed stock symbol like 'MSFT'. Please try again.")
-        continue
+        break
     else:
         stock_symbol = stock_symbol.upper()
         request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={stock_symbol}&apikey={api_key}"
@@ -39,7 +39,8 @@ while True:
             latest_day = dates[0]
             latest_close = tsd[latest_day]["4. close"]
             request_time = ""+datetime.datetime.now().strftime("%Y-%m-%d %I:%M%p")
-
+            # Add recommendation logic: (1 = risk neutral) so buyer will buy at a low price of 10% (of recent range) above the recent low
+            risk_tolerance = float(input("Please input your risk tolerance on a scale of 1-10 (1 being risk neutral):"))
             # Max of all the high prices
             high_prices = []
             low_prices = []
@@ -52,7 +53,17 @@ while True:
 
             recent_high = max(high_prices)
             recent_low = min(low_prices)
+            risk_range = recent_high-recent_low
+            bare_min = recent_low+(risk_range*risk_tolerance/10.0)
+            recommend = ""
+            gl = ""
 
+            if float(latest_close) >= bare_min:
+                recommend = "BUY"
+                gl = "greater"
+            else:
+                recommend = "NO BUY"
+                gl = "less"
             ## Process output
             csv_file_path = os.path.join(os.path.dirname(__file__), "..", "data", "prices_"+symbol+".csv")
 
@@ -84,8 +95,8 @@ while True:
             print(f"RECENT HIGH: {to_usd(float(recent_high))}")
             print(f"RECENT LOW: {to_usd(float(recent_low))}")
             print("-------------------------")
-            print("RECOMMENDATION: BUY!")
-            print("RECOMMENDATION REASON: TODO")
+            print(f"RECOMMENDATION: {recommend}!")
+            print(f"RECOMMENDATION REASON: Because based on your risk tolerance of {risk_tolerance}, the latest close is {gl} than {bare_min}")
             print("-------------------------")
             print(f"WRITING DATA TO CSV: {csv_file_path}...")
             print("-------------------------")
