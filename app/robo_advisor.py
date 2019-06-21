@@ -53,6 +53,7 @@ while True:
 
             recent_high = max(high_prices)
             recent_low = min(low_prices)
+            # Read this for the calculation logic for the recommendation.
             risk_range = recent_high-recent_low
             bare_min = recent_low+(risk_range*risk_tolerance/10.0)
             recommend = ""
@@ -96,7 +97,7 @@ while True:
             print(f"RECENT LOW: {to_usd(float(recent_low))}")
             print("-------------------------")
             print(f"RECOMMENDATION: {recommend}!")
-            print(f"RECOMMENDATION REASON: Because based on your risk tolerance of {risk_tolerance}, the latest close is {gl} than {bare_min}")
+            print(f"RECOMMENDATION REASON: Because based on your risk tolerance of {risk_tolerance}, the latest close is {gl} than {to_usd(bare_min)}")
             print("-------------------------")
             print(f"WRITING DATA TO CSV: {csv_file_path}...")
             print("-------------------------")

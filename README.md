@@ -1,5 +1,4 @@
 # robo-advisor
-# Link: https://github.com/prof-rossetti/nyu-info-2335-201905/blob/master/projects/robo-advisor/README.md 
 
 ## Create & Activate a new anaconda virtual environment
 ```sh
@@ -24,7 +23,7 @@ Add the following to the ".gitignore" file
 .env
 ```
 
-Create a new "data directory.
+Create a new "data directory. 
 Create another ".gitgnore" file under the "data" directory and paste in the following content:
 
 ```sh
@@ -41,7 +40,7 @@ Create another ".gitgnore" file under the "data" directory and paste in the foll
 
 ## AlphaVantage API Key
 Request your own AlphaVantage API key from https://www.alphavantage.co/
-Create a ".env" file and place your secret API Key value in the format of:
+then create a ".env" file and place your secret API Key value in the format of:
 ```sh
 ALPHAVANTAGE_API_KEY="abc123"
 ```
