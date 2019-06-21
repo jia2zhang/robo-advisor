@@ -54,17 +54,24 @@ while True:
             recent_high = max(high_prices)
             recent_low = min(low_prices)
             # Read this for the calculation logic for the recommendation.
+            # A range is found based on the Recent High and Recent Low values. We then take a percent of that value
+            # based on our inputted risk_tolerance to add to the Recent Low to find the bare_min price at which
+            # the buyer is comfortable to commit to buying the stock. If the Latest Close is greater than the bare_min
+            # price, then buyer should be comfortable purchasing the stock. Else buyer should not purchase stock.  
             risk_range = recent_high-recent_low
             bare_min = recent_low+(risk_range*risk_tolerance/10.0)
-            recommend = ""
-            gl = ""
+            # recommend = ""
+            # gl = ""
+            # note = ""
 
             if float(latest_close) >= bare_min:
                 recommend = "BUY"
                 gl = "greater"
+                note = "And with the recent range, anything "+ str('{0:.2f}%'.format((risk_tolerance/10.0)*100.0))+ " above recent low means you should BUY."
             else:
                 recommend = "NO BUY"
                 gl = "less"
+                note = "And with the recent range, price is getting too close to the recent high for your comfort."
             ## Process output
             csv_file_path = os.path.join(os.path.dirname(__file__), "..", "data", "prices_"+symbol+".csv")
 
@@ -97,7 +104,7 @@ while True:
             print(f"RECENT LOW: {to_usd(float(recent_low))}")
             print("-------------------------")
             print(f"RECOMMENDATION: {recommend}!")
-            print(f"RECOMMENDATION REASON: Because based on your risk tolerance of {risk_tolerance}, the latest close is {gl} than {to_usd(bare_min)}")
+            print(f"RECOMMENDATION REASON: Because based on your risk tolerance of {risk_tolerance}, the latest close \nis {gl} than {to_usd(bare_min)}. {note}")
             print("-------------------------")
             print(f"WRITING DATA TO CSV: {csv_file_path}...")
             print("-------------------------")
