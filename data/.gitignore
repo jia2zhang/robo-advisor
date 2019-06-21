@@ -7,3 +7,4 @@
 
 # except this gitignore file:
 !.gitignore
+!prices_TSLA.csv
